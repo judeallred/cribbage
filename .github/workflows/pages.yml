@@ -46,11 +46,10 @@ jobs:
       - name: Run build
         run: npm run build
   
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: dist
-          path: dist   
+          path: dist
 
 
       - name: Deploy to GitHub Pages
