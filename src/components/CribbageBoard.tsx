@@ -82,9 +82,7 @@ const CribbageBoard: React.FC = () => {
   const bufferTimeouts = useRef<(number | null)[]>([null, null, null]);
   const [lastGameState, setLastGameState] = useState<GameState | null>(null);
   const [resetState, setResetState] = useState<'reset' | 'undo'>('reset');
-  const [resetAnim, setResetAnim] = useState<'in' | 'out' | null>(null);
   const [bubbleProgress, setBubbleProgress] = useState<number[]>([0, 0, 0]);
-  const [recentlyAddedMarks, setRecentlyAddedMarks] = useState<{[col: number]: number[]}>({});
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const [wakeLockActive, setWakeLockActive] = useState<boolean>(true);
   const columnRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -186,18 +184,6 @@ const CribbageBoard: React.FC = () => {
         const newBatchIdx = player.batches.length;
         player.batches = [...player.batches, { value: player.buffer, at: newScore }];
         player.score = newScore;
-        // Animate the new label
-        setRecentlyAddedMarks((prevMarks) => {
-          const arr = prevMarks[idx] ? [...prevMarks[idx]] : [];
-          arr.push(newBatchIdx);
-          return { ...prevMarks, [idx]: arr };
-        });
-        setTimeout(() => {
-          setRecentlyAddedMarks((prevMarks) => {
-            const arr = prevMarks[idx] ? prevMarks[idx].filter(i => i !== newBatchIdx) : [];
-            return { ...prevMarks, [idx]: arr };
-          });
-        }, 600);
       }
       player.buffer = 0;
       player.showBubble = false;
@@ -252,11 +238,7 @@ const CribbageBoard: React.FC = () => {
     }, BATCH_TIMEOUT);
     // If in undo reset state, revert to reset on first score
     if (resetState === 'undo') {
-      setResetAnim('out');
-      setTimeout(() => {
-        setResetState('reset');
-        setResetAnim('in');
-      }, 200);
+      setResetState('reset');
     }
   };
 
@@ -291,22 +273,14 @@ const CribbageBoard: React.FC = () => {
         players: players.map(p => ({ ...p, batches: [...p.batches] })),
         winnerIdx: winnerIdx,
       });
-      setResetAnim('out');
-      setTimeout(() => {
-        setPlayers(Array(playerCount).fill(0).map(defaultPlayerState));
-        setWinnerIdx(null);
-        setResetState('undo');
-        setResetAnim('in');
-      }, 200);
+      setPlayers(Array(playerCount).fill(0).map(defaultPlayerState));
+      setWinnerIdx(null);
+      setResetState('undo');
     } else if (resetState === 'undo' && lastGameState) {
-      setResetAnim('out');
-      setTimeout(() => {
-        setPlayerCount(lastGameState.playerCount);
-        setPlayers(lastGameState.players.map(p => ({ ...p, batches: [...p.batches] })));
-        setWinnerIdx(lastGameState.winnerIdx);
-        setResetState('reset');
-        setResetAnim('in');
-      }, 200);
+      setPlayerCount(lastGameState.playerCount);
+      setPlayers(lastGameState.players.map(p => ({ ...p, batches: [...p.batches] })));
+      setWinnerIdx(lastGameState.winnerIdx);
+      setResetState('reset');
     }
   };
 
@@ -410,9 +384,6 @@ const CribbageBoard: React.FC = () => {
     );
   };
 
-  // For winner text
-  const colorNames = ['Red', 'Blue', 'Green'];
-
   useEffect(() => {
     if (containerRef.current) {
       setContainerDimensions({
@@ -462,7 +433,7 @@ const CribbageBoard: React.FC = () => {
           {playerCount === 2 ? '2 Players' : '3 Players'}
         </button>
         <button
-          className={`reset-btn reset-anim-${resetAnim || 'in'}`}
+          className={`reset-btn reset-anim-${resetState === 'reset' ? 'in' : 'out'}`}
           onClick={handleReset}
         >
           {resetState === 'reset' ? 'Reset' : 'Undo Reset'}
