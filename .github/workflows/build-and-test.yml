@@ -30,6 +30,11 @@ jobs:
       with:
         name: dist
         path: dist
+        
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: dist
 
   test:
     needs: build
