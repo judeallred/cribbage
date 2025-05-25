@@ -105,8 +105,9 @@
   width: 100vw;
   max-width: 500px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 12px;
   padding: 16px 12px 0 12px;
   box-sizing: border-box;
 }
@@ -194,7 +195,7 @@
   border-radius: 16px;
   border: 2px solid #a97c50;
   margin-bottom: 10px;
-  overflow: visible;
+  overflow: hidden;
   display: flex;
   align-items: flex-end;
   box-shadow: 0 1px 6px rgba(0,0,0,0.04);
@@ -214,8 +215,8 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  background: linear-gradient(180deg, #ffe066 0%, #f7e7b6 100%);
-  border-radius: 0 0 16px 16px;
+  background: linear-gradient(180deg, var(--bar-color, #ffe066) 0%, #f7e7b6 100%);
+  border-radius: 0;
   z-index: 1;
   transition: height 0.3s cubic-bezier(.4,2,.6,1);
 }
@@ -356,15 +357,21 @@
 
 .winner-float {
   position: absolute;
-  top: 80px;
-  width: 100px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-shadow: 0 1px 0 #fffbe6, 0 0 8px #fffbe6;
+  letter-spacing: 1px;
+  animation: winner-pop 0.7s cubic-bezier(.4,2,.6,1);
+  background: rgba(255,255,255,0.85);
+  border-radius: 16px;
+  padding: 10px 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+  border: 3px solid;
   z-index: 20;
+  pointer-events: none;
 }
 
 .winner-text {
@@ -443,4 +450,75 @@
   align-items: center;
   justify-content: center;
   min-width: 120px;
+}
+
+.bar-preview-fill {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-radius: 0;
+  opacity: 0.7;
+  z-index: 3;
+  cursor: pointer;
+  transition: height 0.2s;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  box-shadow: none;
+  margin-top: 0;
+  border-top: none;
+}
+.bar-preview-label {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: inherit;
+  background: #fffbe6;
+  border-radius: 8px;
+  padding: 2px 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  opacity: 0.95;
+  pointer-events: none;
+  border: 2px solid currentColor;
+  z-index: 10;
+  user-select: none;
+  white-space: nowrap;
+}
+.bar-preview-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.35);
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 0;
+  transition: height 0.1s;
+}
+
+.wake-lock-btn {
+  background: #fff7b2;
+  color: #7a5c2e;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, opacity 0.2s, transform 0.2s;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wake-lock-btn:hover {
+  background: #ffe066;
+  color: #a97c50;
+}
+
+.wake-lock-btn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
 } 
