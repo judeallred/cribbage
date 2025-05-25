@@ -90,7 +90,7 @@ describe('CribbageBoard', () => {
     fireEvent.click(advanceOneButton!);
     await waitFor(() => {
       // Find the preview label element containing a text node starting with '+'
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_, element) => {
         if (!element) return false; // Element must exist
         // Check if the element's text content starts with '+' and none of its children do.
         const textContent = element.textContent || '';
@@ -116,7 +116,7 @@ describe('CribbageBoard', () => {
     // Simulate committing the buffer (e.g., by waiting for timeout, but for test, we click the preview label if present)
     try {
       // Find the preview label element containing a text node starting with '+'
-      const previewLabel = await screen.findByText((content, element) => {
+      const previewLabel = await screen.findByText((_, element) => {
         if (!element) return false; // Element must exist
         // Check if the element's text content starts with '+' and none of its children do.
         const textContent = element.textContent || '';
