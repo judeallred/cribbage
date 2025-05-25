@@ -3,24 +3,8 @@ import './CribbageBoard.css';
 import Confetti from 'react-confetti';
 
 const CRIBBAGE_MAX = 121;
-const ADVANCE_OPTIONS = [1, 2, 5];
 const BATCH_TIMEOUT = 2000; // 2 seconds
 const STORAGE_KEY = 'cribbage-game-state';
-
-// Wake Lock API types
-interface WakeLockSentinel {
-  release: () => Promise<void>;
-}
-
-interface WakeLock {
-  request: (type: 'screen') => Promise<WakeLockSentinel>;
-}
-
-declare global {
-  interface Navigator {
-    wakeLock: WakeLock | undefined;
-  }
-}
 
 interface Batch {
   value: number;
@@ -101,8 +85,8 @@ const CribbageBoard: React.FC = () => {
   // Animate the countdown gradient for each bubble
   useEffect(() => {
     const interval = setInterval(() => {
-      setBubbleProgress((prev) =>
-        players.map((player, idx) => {
+      setBubbleProgress((_prev) =>
+        players.map((player, _idx) => {
           if (player.showBubble && player.buffer > 0 && player.bufferStartTime) {
             const elapsed = Date.now() - player.bufferStartTime;
             return Math.min(1, elapsed / BATCH_TIMEOUT);
@@ -181,7 +165,6 @@ const CribbageBoard: React.FC = () => {
         if (newScore >= CRIBBAGE_MAX) {
           setWinnerIdx(idx);
         }
-        const newBatchIdx = player.batches.length;
         player.batches = [...player.batches, { value: player.buffer, at: newScore }];
         player.score = newScore;
       }
